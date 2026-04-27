@@ -23,7 +23,7 @@ public class Chunk : MonoBehaviour
             if (block.Type == "air")
                 continue;
 
-            InsertData(new Vector3(block.z, block.y, block.x));
+            InsertData(new Vector3(block.x, block.y, block.z));
         }
 
         CreateMesh();
@@ -56,4 +56,5 @@ public class Chunk : MonoBehaviour
 
         meshFilter.mesh = mesh;
     }
+
 }

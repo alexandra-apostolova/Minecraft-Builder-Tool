@@ -10,7 +10,7 @@ public class ReadSchema : MonoBehaviour
     {
         NbtFile file = new NbtFile();
 
-        string path = Path.Combine(Application.streamingAssetsPath, "houseBare.schem");
+        string path = Path.Combine(Application.streamingAssetsPath, "houseWithDecorations.schem");
         file.LoadFromFile(path);
 
         NbtCompound root = file.RootTag;
