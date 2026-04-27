@@ -2,10 +2,6 @@ using UnityEngine;
 
 public static class CubeData
 {
-    public static readonly int chunkWidth = 10;
-    public static readonly int chunkHeight = 14;
-    public static readonly int chunkLength = 9;
-
     public static readonly Vector3[] verts = new Vector3[8]
     {
             new Vector3(0.0f, 0.0f, 0.0f),

@@ -18,18 +18,15 @@ public class Chunk : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
 
-        for (int i = 0; i < CubeData.chunkHeight; i++)
+        foreach (var block in HouseData.Blocks)
         {
-            for (int j = 0; j < CubeData.chunkWidth; j++)
-            {
-                for (int k = 0; k < CubeData.chunkLength; k++)
-                {
-                    InsertData(new Vector3(i, j, k));
-                }
-            }
-        }
-        CreateMesh();
+            if (block.Type == "air")
+                continue;
 
+            InsertData(new Vector3(block.y, block.x, block.z));
+        }
+
+        CreateMesh();
     }
 
     void InsertData(Vector3 pos)

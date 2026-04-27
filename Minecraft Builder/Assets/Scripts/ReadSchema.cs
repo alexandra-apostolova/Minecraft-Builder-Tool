@@ -6,20 +6,19 @@ using fNbt;
 using System.IO;
 public class ReadSchema : MonoBehaviour
 {
-    public short width;
-    public short height;
-    public short length;
     void Start()
     {
         NbtFile file = new NbtFile();
-        file.LoadFromFile("houseBare.schem");
+
+        string path = Path.Combine(Application.streamingAssetsPath, "houseBare.schem");
+        file.LoadFromFile(path);
 
         NbtCompound root = file.RootTag;
         NbtCompound schematic = root["Schematic"] as NbtCompound;
 
-        width = schematic.Get<NbtShort>("Width").Value;
-        height = schematic.Get<NbtShort>("Height").Value;
-        length = schematic.Get<NbtShort>("Length").Value;
+        HouseData.chunkWidth = schematic.Get<NbtShort>("Width").Value;
+        HouseData.chunkHeight = schematic.Get<NbtShort>("Height").Value;
+        HouseData.chunkLength = schematic.Get<NbtShort>("Length").Value;
 
         NbtCompound blocks = schematic.Get<NbtCompound>("Blocks");
         NbtCompound paletteTag = blocks.Get<NbtCompound>("Palette");
@@ -28,7 +27,7 @@ public class ReadSchema : MonoBehaviour
         foreach (var tag in paletteTag.Tags)
         {
             int id = tag.IntValue;
-            string blockName = tag.Name;
+            string blockName = tag.Name.Substring(10);
 
             palette[id] = blockName;
         }
@@ -46,7 +45,7 @@ public class ReadSchema : MonoBehaviour
                 continue;
             }
 
-            (int x, int y, int z) = IndexToPos(i, width, length);
+            (int x, int y, int z) = IndexToPos(i, HouseData.chunkWidth, HouseData.chunkLength);
 
             Block blockToAdd = new Block
             {
@@ -57,8 +56,9 @@ public class ReadSchema : MonoBehaviour
             };
             blocksList.Add(blockToAdd);
         }
-    }
 
+        HouseData.Blocks = blocksList;
+    }
     static (int x, int z, int y) IndexToPos(int index, int width, int length)
     {
         int x = index % width;
