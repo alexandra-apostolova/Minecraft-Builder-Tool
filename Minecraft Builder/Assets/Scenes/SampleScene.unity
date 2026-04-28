@@ -241,7 +241,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21775085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2c1dc6a1cc88fc4c8b90915baf26e4e, type: 3}
   m_Name: 
@@ -604,8 +604,8 @@ GameObject:
   - component: {fileID: 1480978349}
   - component: {fileID: 1480978348}
   - component: {fileID: 1480978347}
-  - component: {fileID: 1480978346}
   - component: {fileID: 1480978350}
+  - component: {fileID: 1480978346}
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged

@@ -6,7 +6,7 @@ using fNbt;
 using System.IO;
 public class ReadSchema : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
         NbtFile file = new NbtFile();
 
@@ -54,7 +54,11 @@ public class ReadSchema : MonoBehaviour
                 z = z,
                 Type = palette[paletteIndex]
             };
-            blocksList.Add(blockToAdd);
+
+            if (blockToAdd.Type != "air")
+            {
+                blocksList.Add(blockToAdd);
+            }
         }
 
         HouseData.Blocks = blocksList;
