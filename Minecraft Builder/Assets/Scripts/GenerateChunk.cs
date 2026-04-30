@@ -25,6 +25,9 @@ public class GenerateChunk : MonoBehaviour
 
         foreach (var block in HouseData.Blocks)
         {
+            if (block.Type == "air")
+                continue;
+
             Vector3 pos = new(block.x, block.y, block.z);
 
             InsertData(pos);
@@ -37,6 +40,9 @@ public class GenerateChunk : MonoBehaviour
     {
         foreach (var block in HouseData.Blocks)
         {
+            if (block.Type == "air")
+                continue;
+
             voxelMap[block.x, block.y, block.z] = true;
         }
     }

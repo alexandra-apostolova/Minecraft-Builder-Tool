@@ -1,9 +1,10 @@
+using fNbt;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Unity.Collections.AllocatorManager;
-using fNbt;
-using System.IO;
 public class ReadSchema : MonoBehaviour
 {
     void Awake()
@@ -55,10 +56,54 @@ public class ReadSchema : MonoBehaviour
                 Type = palette[paletteIndex]
             };
 
-            if (blockToAdd.Type != "air")
+            ReadOnlySpan<char> fullId = blockToAdd.Type;
+
+            if (blockToAdd.Type.Contains('['))
             {
-                blocksList.Add(blockToAdd);
+                int openBracketIndex = fullId.IndexOf('[');
+                int closeBracketIndex = fullId.IndexOf(']');
+
+                ReadOnlySpan<char> name = fullId.Slice(0, openBracketIndex);
+                blockToAdd.Name = name.ToString();
+
+                ReadOnlySpan<char> inner = fullId.Slice(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1);
+
+                while (!inner.IsEmpty)
+                {
+                    int comaIndex = inner.IndexOf(',');
+
+                    ReadOnlySpan<char> pair;
+                    if (comaIndex == -1)
+                    {
+                        pair = inner;
+                        inner = ReadOnlySpan<char>.Empty;
+                    }
+                    else
+                    {
+                        pair = inner.Slice(0, comaIndex);
+                        inner = inner.Slice(comaIndex + 1);
+                    }
+
+                    int equalsIndex = pair.IndexOf("=");
+                    ReadOnlySpan<char> key = pair.Slice(0, equalsIndex);
+                    ReadOnlySpan<char> value = pair.Slice(equalsIndex + 1);
+
+                    if (key.ToString() == "facing")
+                    {
+                        blockToAdd.Facing = value.ToString();
+                    }
+                    else if (key.ToString() == "half")
+                    {
+                        blockToAdd.Half = value.ToString();
+                    }
+                    else if (key.ToString() == "axis")
+                    {
+                        blockToAdd.Axis = value.ToString();
+                    }
+                }
             }
+
+            blocksList.Add(blockToAdd);
         }
 
         HouseData.Blocks = blocksList;
@@ -79,4 +124,9 @@ public class Block
     public int z;
     public int y;
     public string Type;
+
+    public string Name;
+    public string Facing;
+    public string Half;
+    public string Axis;
 }
