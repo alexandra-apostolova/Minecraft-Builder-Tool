@@ -30,7 +30,7 @@ public class GenerateChunk : MonoBehaviour
 
             Vector3 pos = new(block.x, block.y, block.z);
 
-            InsertData(pos);
+            InsertData(pos, block.Name);
         }
 
         CreateMesh();
@@ -60,27 +60,56 @@ public class GenerateChunk : MonoBehaviour
 
         return voxelMap[posInt.x, posInt.y, posInt.z];
     }
-    void InsertData(Vector3 pos)
+    void InsertData(Vector3 pos, string blockName)
     {
         for (int i = 0; i < 6; i++)
         {
             Vector3 neighborPos = pos + CubeData.faceChecks[i];
             if (!CheckVoxel(neighborPos))
             {
-                for (int j = 0; j < 6; j++)
-                {
-                    int triangleIndex = CubeData.tris[i, j];
-                    vertices.Add(CubeData.verts[triangleIndex] + pos);
-                    uvs.Add(CubeData.uvs[j]);
+                vertices.Add(CubeData.verts[CubeData.tris[i, 0]] + pos);
+                vertices.Add(CubeData.verts[CubeData.tris[i, 1]] + pos);
+                vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
+                vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
 
-                    triangles.Add(vertexIndex);
-                    vertexIndex++;
+                if (CubeData.blockTextureMap.ContainsKey(blockName))
+                {
+                    AddTexture(CubeData.blockTextureMap[blockName]);
                 }
+                else
+                {
+                    AddTexture(2);
+                }
+
+                triangles.Add(vertexIndex);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 2);
+                triangles.Add(vertexIndex + 1);
+                triangles.Add(vertexIndex + 3);
+
+                vertexIndex += 4;
             }
         }
 
     }
 
+    void AddTexture(int textureId)
+    {
+        float y = textureId / CubeData.textureAtlasSizeInBlocks;
+        float x = textureId - (y * CubeData.textureAtlasSizeInBlocks);
+
+        y *= CubeData.normalizedBlockTextureSize;
+        x *= CubeData.normalizedBlockTextureSize;
+
+        y = 1f - y - CubeData.normalizedBlockTextureSize;
+
+        uvs.Add(new Vector2(x, y));
+        uvs.Add(new Vector2(x, y + CubeData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + CubeData.normalizedBlockTextureSize, y));
+        uvs.Add(new Vector2(x + CubeData.normalizedBlockTextureSize, y + CubeData.normalizedBlockTextureSize));
+
+    }
     void CreateMesh()
     {
         Mesh mesh = new Mesh();

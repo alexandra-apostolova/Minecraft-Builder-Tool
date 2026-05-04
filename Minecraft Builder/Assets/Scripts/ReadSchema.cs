@@ -102,8 +102,12 @@ public class ReadSchema : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                blockToAdd.Name = blockToAdd.Type;
+            }
 
-            blocksList.Add(blockToAdd);
+                blocksList.Add(blockToAdd);
         }
 
         HouseData.Blocks = blocksList;
