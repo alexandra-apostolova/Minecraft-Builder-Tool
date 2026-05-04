@@ -30,7 +30,7 @@ public class GenerateChunk : MonoBehaviour
 
             Vector3 pos = new(block.x, block.y, block.z);
 
-            InsertData(pos, block.Name);
+            InsertData(pos, block);
         }
 
         CreateMesh();
@@ -60,7 +60,7 @@ public class GenerateChunk : MonoBehaviour
 
         return voxelMap[posInt.x, posInt.y, posInt.z];
     }
-    void InsertData(Vector3 pos, string blockName)
+    void InsertData(Vector3 pos, Block block)
     {
         for (int i = 0; i < 6; i++)
         {
@@ -72,13 +72,13 @@ public class GenerateChunk : MonoBehaviour
                 vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
                 vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
 
-                if (CubeData.blockTextureMap.ContainsKey(blockName))
+                if (CubeData.blockTextureMap.ContainsKey(block.Name))
                 {
-                    AddTexture(CubeData.blockTextureMap[blockName]);
+                    AddTexture(block.GetTextureId(i));
                 }
                 else
                 {
-                    AddTexture(2);
+                    AddTexture(3);
                 }
 
                 triangles.Add(vertexIndex);

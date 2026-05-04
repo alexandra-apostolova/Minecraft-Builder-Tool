@@ -49,17 +49,19 @@ public static class CubeData
         new Vector2(1.0f, 1.0f),
     };
 
-    public static readonly Dictionary<string, int> blockTextureMap = new Dictionary<string, int>()
+    public static readonly Dictionary<string, int[]> blockTextureMap = new Dictionary<string, int[]>()
     {
-        { "oak_planks", 12 },
-        {"oak_log", 15 },
-        {"spruce_planks", 13 },
-        {"spruce_trapdoor", 11 },
-        {"dark_oak_door", 6 },
-        {"grass_block", 8 },
-        {"dirt", 10 },
-        {"stone", 1 },
-        {"cobblestone", 0}
+        {"oak_planks", new int[]{ 12 } },
+        {"oak_log", new int[]{ 14, 15 } },
+        {"spruce_planks", new int[]{ 13 } },
+        {"spruce_trapdoor", new int[]{ 11 } },
+        {"spruce_door", new int[]{ 6, 7 } },
+        {"grass_block", new int[]{ 8, 9, 10 } },
+        {"dirt", new int[]{ 10 } },
+        {"stone", new int[]{ 1 } },
+        {"cobblestone", new int[]{ 0 } },
+        {"decorated_pot", new int[]{ 4 } },
+        {"glass_pane", new int[]{ 2 } }
     };
 
 }

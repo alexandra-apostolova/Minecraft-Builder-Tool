@@ -107,7 +107,7 @@ public class ReadSchema : MonoBehaviour
                 blockToAdd.Name = blockToAdd.Type;
             }
 
-                blocksList.Add(blockToAdd);
+            blocksList.Add(blockToAdd);
         }
 
         HouseData.Blocks = blocksList;
@@ -133,4 +133,31 @@ public class Block
     public string Facing;
     public string Half;
     public string Axis;
+    public int GetTextureId(int faceIndex)
+    {
+        int[] textures = CubeData.blockTextureMap[Name];
+        if (textures.Length == 1)
+        {
+            return textures[0];
+        }
+
+        if (textures.Length == 2)
+        {
+            if (faceIndex == 2 || faceIndex == 3)
+                return textures[0];
+            return textures[1];
+        }
+
+        if (textures.Length == 3)
+        {
+            if (faceIndex == 2)
+                return textures[0];
+            if (faceIndex == 3)
+                return textures[2];
+            return textures[1];
+        }
+
+        Debug.Log("Error, invalid faceIndex");
+        return textures[0];
+    }
 }
