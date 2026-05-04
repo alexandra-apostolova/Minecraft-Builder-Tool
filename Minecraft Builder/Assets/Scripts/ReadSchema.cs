@@ -135,7 +135,7 @@ public class Block
     public string Axis;
     public int GetTextureId(int faceIndex)
     {
-        int[] textures = CubeData.blockTextureMap[Name];
+        int[] textures = CubeData.blockTextureMap[Name].Textures;
         if (textures.Length == 1)
         {
             return textures[0];

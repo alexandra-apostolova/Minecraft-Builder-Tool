@@ -1,6 +1,9 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
+using static UnityEditor.PlayerSettings;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class GenerateChunk : MonoBehaviour
@@ -62,6 +65,60 @@ public class GenerateChunk : MonoBehaviour
     }
     void InsertData(Vector3 pos, Block block)
     {
+        if (CubeData.blockTextureMap.ContainsKey(block.Name))
+        {
+            CubeData.BlockDefinition blockDef = CubeData.blockTextureMap[block.Name];
+
+            switch (blockDef.RenderType)
+            {
+                case BlockRenderTypes.Cube:
+                    InsertCube(pos, block);
+                    break;
+                case BlockRenderTypes.Stairs:
+                    break;
+                case BlockRenderTypes.Slab:
+                    break;
+                case BlockRenderTypes.Fence:
+                    break;
+                case BlockRenderTypes.Cross:
+                    break;
+                case BlockRenderTypes.Custom:
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Vector3 neighborPos = pos + CubeData.faceChecks[i];
+                if (!CheckVoxel(neighborPos))
+                {
+                    vertices.Add(CubeData.verts[CubeData.tris[i, 0]] + pos);
+                    vertices.Add(CubeData.verts[CubeData.tris[i, 1]] + pos);
+                    vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
+                    vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
+
+                    AddTexture(3);
+
+                    triangles.Add(vertexIndex);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 2);
+                    triangles.Add(vertexIndex + 1);
+                    triangles.Add(vertexIndex + 3);
+
+                    vertexIndex += 4;
+                }
+            }
+        }
+
+
+    }
+
+    private void InsertCube(Vector3 pos, Block block)
+    {
         for (int i = 0; i < 6; i++)
         {
             Vector3 neighborPos = pos + CubeData.faceChecks[i];
@@ -72,14 +129,7 @@ public class GenerateChunk : MonoBehaviour
                 vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
                 vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
 
-                if (CubeData.blockTextureMap.ContainsKey(block.Name))
-                {
-                    AddTexture(block.GetTextureId(i));
-                }
-                else
-                {
-                    AddTexture(3);
-                }
+                AddTexture(block.GetTextureId(i));
 
                 triangles.Add(vertexIndex);
                 triangles.Add(vertexIndex + 1);
@@ -91,7 +141,6 @@ public class GenerateChunk : MonoBehaviour
                 vertexIndex += 4;
             }
         }
-
     }
 
     void AddTexture(int textureId)
