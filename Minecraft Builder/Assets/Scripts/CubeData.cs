@@ -33,15 +33,15 @@ public static class CubeData
         new Vector3(0.0f, 0.5f, 1.0f),
     };
 
-    public static readonly Vector3[] stairsVerts = new Vector3[8]
+    public static readonly Vector3[] halfSlabVerts = new Vector3[8]
     {
         new Vector3(0.0f, 0.0f, 0.0f),
-        new Vector3(1.0f, 0.0f, 0.0f),
-        new Vector3(1.0f, 0.5f, 0.0f),
+        new Vector3(0.5f, 0.0f, 0.0f),
+        new Vector3(0.5f, 0.5f, 0.0f),
         new Vector3(0.0f, 0.5f, 0.0f),
         new Vector3(0.0f, 0.0f, 1.0f),
-        new Vector3(1.0f, 0.0f, 1.0f),
-        new Vector3(1.0f, 0.5f, 1.0f),
+        new Vector3(0.5f, 0.0f, 1.0f),
+        new Vector3(0.5f, 0.5f, 1.0f),
         new Vector3(0.0f, 0.5f, 1.0f),
     };
 

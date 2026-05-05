@@ -38,7 +38,6 @@ public class GenerateChunk : MonoBehaviour
 
         CreateMesh();
     }
-
     void PopulateVoxelMap()
     {
         foreach (var block in HouseData.Blocks)
@@ -49,7 +48,6 @@ public class GenerateChunk : MonoBehaviour
             voxelMap[block.x, block.y, block.z] = true;
         }
     }
-
     bool CheckVoxel(Vector3 pos)
     {
         Vector3Int posInt = Vector3Int.FloorToInt(pos);
@@ -87,68 +85,84 @@ public class GenerateChunk : MonoBehaviour
                 case BlockRenderTypes.Custom:
                     break;
                 default:
+                    InsertCube(pos, block);
                     break;
             }
         }
-        else
+    }
+
+    private void AddFace(Vector3[] verts, Vector3 pos, Vector3 offsets, int faceIndex, Block block)
+    {
+        for (int j = 0; j < 4; j++)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                Vector3 neighborPos = pos + CubeData.faceChecks[i];
-                if (!CheckVoxel(neighborPos))
-                {
-                    vertices.Add(CubeData.verts[CubeData.tris[i, 0]] + pos);
-                    vertices.Add(CubeData.verts[CubeData.tris[i, 1]] + pos);
-                    vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
-                    vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
+            Vector3 vert = verts[CubeData.tris[faceIndex, j]];
 
-                    AddTexture(3);
-
-                    triangles.Add(vertexIndex);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 2);
-                    triangles.Add(vertexIndex + 1);
-                    triangles.Add(vertexIndex + 3);
-
-                    vertexIndex += 4;
-                }
-            }
+            //vert = RotateVert(vert, block.Facing);
+            vert += offsets;
+            vertices.Add(vert + pos);
         }
 
+        if (CubeData.blockTextureMap.ContainsKey(block.Name))
+        {
+            AddTexture(block.GetTextureId(faceIndex));
+        }
+        else
+        {
+            AddTexture(3);
+        }
 
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 3);
+
+        vertexIndex += 4;
+    }
+
+    private Vector3 RotateVert(Vector3 vert, string facing)
+    {
+        switch (facing)
+        {
+            case "north":
+                return vert;
+            case "south":
+                return new Vector3(1f - vert.x, vert.y, 1f - vert.z);
+            case "west":
+                return new Vector3(1f - vert.z, vert.y, vert.x);
+            case "east":
+                return new Vector3(vert.z, vert.y, 1f - vert.x);
+            default:
+                return vert;
+        }
     }
 
     private void InsertStairs(Vector3 pos, Block block)
     {
         InsertSlab(pos, block);
+        InsertHalfSlab(pos, block);
+    }
+
+    private void InsertHalfSlab(Vector3 pos, Block block)
+    {
+        //float yOffset = 0.5f;
+        //float xOffset = 0.5f;
+
+        Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
+
+        for (int i = 0; i < 6; i++)
+        {
+            AddFace(CubeData.halfSlabVerts, pos, offset, i, block);
+        }
     }
 
     private void InsertSlab(Vector3 pos, Block block)
     {
+        float yOffset = (block.Half == "top") ? 0.5f : 0.0f;
         for (int i = 0; i < 6; i++)
         {
-            //Vector3 neighborPos = pos + CubeData.faceChecks[i];
-            float yOffset = (block.Half == "top") ? 0.5f : 0.0f;
-
-            for (int j = 0; j < 4; j++)
-            {
-                Vector3 vert = CubeData.slabVerts[CubeData.tris[i, j]];
-                vert.y += yOffset;
-                vertices.Add(vert + pos);
-            }
-
-            AddTexture(block.GetTextureId(i));
-
-            triangles.Add(vertexIndex);
-            triangles.Add(vertexIndex + 1);
-            triangles.Add(vertexIndex + 2);
-            triangles.Add(vertexIndex + 2);
-            triangles.Add(vertexIndex + 1);
-            triangles.Add(vertexIndex + 3);
-
-            vertexIndex += 4;
-
+            AddFace(CubeData.slabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
         }
     }
 
@@ -159,21 +173,7 @@ public class GenerateChunk : MonoBehaviour
             Vector3 neighborPos = pos + CubeData.faceChecks[i];
             if (!CheckVoxel(neighborPos))
             {
-                vertices.Add(CubeData.verts[CubeData.tris[i, 0]] + pos);
-                vertices.Add(CubeData.verts[CubeData.tris[i, 1]] + pos);
-                vertices.Add(CubeData.verts[CubeData.tris[i, 2]] + pos);
-                vertices.Add(CubeData.verts[CubeData.tris[i, 3]] + pos);
-
-                AddTexture(block.GetTextureId(i));
-
-                triangles.Add(vertexIndex);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 3);
-
-                vertexIndex += 4;
+                AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
             }
         }
     }
