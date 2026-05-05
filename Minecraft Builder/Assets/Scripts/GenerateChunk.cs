@@ -75,8 +75,10 @@ public class GenerateChunk : MonoBehaviour
                     InsertCube(pos, block);
                     break;
                 case BlockRenderTypes.Stairs:
+                    InsertStairs(pos, block);
                     break;
                 case BlockRenderTypes.Slab:
+                    InsertSlab(pos, block);
                     break;
                 case BlockRenderTypes.Fence:
                     break;
@@ -115,6 +117,39 @@ public class GenerateChunk : MonoBehaviour
         }
 
 
+    }
+
+    private void InsertStairs(Vector3 pos, Block block)
+    {
+        InsertSlab(pos, block);
+    }
+
+    private void InsertSlab(Vector3 pos, Block block)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            //Vector3 neighborPos = pos + CubeData.faceChecks[i];
+            float yOffset = (block.Half == "top") ? 0.5f : 0.0f;
+
+            for (int j = 0; j < 4; j++)
+            {
+                Vector3 vert = CubeData.slabVerts[CubeData.tris[i, j]];
+                vert.y += yOffset;
+                vertices.Add(vert + pos);
+            }
+
+            AddTexture(block.GetTextureId(i));
+
+            triangles.Add(vertexIndex);
+            triangles.Add(vertexIndex + 1);
+            triangles.Add(vertexIndex + 2);
+            triangles.Add(vertexIndex + 2);
+            triangles.Add(vertexIndex + 1);
+            triangles.Add(vertexIndex + 3);
+
+            vertexIndex += 4;
+
+        }
     }
 
     private void InsertCube(Vector3 pos, Block block)

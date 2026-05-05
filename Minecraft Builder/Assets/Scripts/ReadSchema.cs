@@ -92,7 +92,7 @@ public class ReadSchema : MonoBehaviour
                     {
                         blockToAdd.Facing = value.ToString();
                     }
-                    else if (key.ToString() == "half")
+                    else if (key.ToString() == "half" || key.ToString() == "type")
                     {
                         blockToAdd.Half = value.ToString();
                     }
