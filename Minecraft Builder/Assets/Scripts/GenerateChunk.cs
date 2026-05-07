@@ -91,13 +91,17 @@ public class GenerateChunk : MonoBehaviour
         }
     }
 
-    private void AddFace(Vector3[] verts, Vector3 pos, Vector3 offsets, int faceIndex, Block block)
+    private void AddFace(Vector3[] verts, Vector3 pos, 
+        Vector3 offsets, int faceIndex, Block block)
     {
+        Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
+        Quaternion rotation = GetRotation(block.Facing);
         for (int j = 0; j < 4; j++)
         {
             Vector3 vert = verts[CubeData.tris[faceIndex, j]];
             vert += offsets;
 
+            vert = rotation * (vert - center) + center;
             vertices.Add(vert + pos);
 
             if (CubeData.blockTextureMap.ContainsKey(block.Name))
@@ -136,10 +140,26 @@ public class GenerateChunk : MonoBehaviour
         InsertHalfSlab(pos, block);
     }
 
+    private Quaternion GetRotation(string direction)
+    {
+        switch (direction)
+        {
+            case "north":
+                return Quaternion.Euler(0, 270, 0);
+            case "east":
+                return Quaternion.Euler(0, 0, 0);
+            case "south":
+                return Quaternion.Euler(0, 90, 0);
+            case "west":
+                return Quaternion.Euler(0, 180, 0);
+            default:
+                return Quaternion.Euler(0, 0, 0);
+        }
+    }
+
     private void InsertHalfSlab(Vector3 pos, Block block)
     {
         Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
-
         for (int i = 0; i < 6; i++)
         {
             AddFace(CubeData.halfSlabVerts, pos, offset, i, block);
