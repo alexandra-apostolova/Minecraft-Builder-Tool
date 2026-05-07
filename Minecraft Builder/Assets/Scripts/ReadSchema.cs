@@ -46,13 +46,13 @@ public class ReadSchema : MonoBehaviour
                 continue;
             }
 
-            (int x, int y, int z) = IndexToPos(i, HouseData.chunkWidth, HouseData.chunkLength);
+            Vector3Int blockPos = IndexToPos(i, HouseData.chunkWidth, HouseData.chunkLength);
 
             Block blockToAdd = new Block
             {
-                x = x,
-                y = y,
-                z = z,
+                x = blockPos.x,
+                y = blockPos.y,
+                z = blockPos.z,
                 Type = palette[paletteIndex]
             };
 
@@ -112,13 +112,13 @@ public class ReadSchema : MonoBehaviour
 
         HouseData.Blocks = blocksList;
     }
-    static (int x, int z, int y) IndexToPos(int index, int width, int length)
+    static Vector3Int IndexToPos(int index, int width, int length)
     {
         int x = index % width;
-        int z = (index / width) % length;
         int y = index / (width * length);
+        int z = (index / width) % length;
 
-        return (x, y, z);
+        return new Vector3Int(x, y, z);
     }
 }
 
@@ -135,29 +135,24 @@ public class Block
     public string Axis;
     public int GetTextureId(int faceIndex)
     {
-        int[] textures = CubeData.blockTextureMap[Name].Textures;
-        if (textures.Length == 1)
+        int[] faceTextures = CubeData.blockTextureMap[Name].FaceTextures;
+        switch (faceIndex)
         {
-            return textures[0];
+            case 0:
+                return faceTextures[0];
+            case 1:
+                return faceTextures[1];
+            case 2:
+                return faceTextures[2];
+            case 3:
+                return faceTextures[3];
+            case 4:
+                return faceTextures[4];
+            case 5:
+                return faceTextures[5];
+            default:
+                Debug.Log("Error! Invalid faceIndex.");
+                return faceTextures[0];
         }
-
-        if (textures.Length == 2)
-        {
-            if (faceIndex == 2 || faceIndex == 3)
-                return textures[0];
-            return textures[1];
-        }
-
-        if (textures.Length == 3)
-        {
-            if (faceIndex == 2)
-                return textures[0];
-            if (faceIndex == 3)
-                return textures[2];
-            return textures[1];
-        }
-
-        Debug.Log("Error, invalid faceIndex");
-        return textures[0];
     }
 }

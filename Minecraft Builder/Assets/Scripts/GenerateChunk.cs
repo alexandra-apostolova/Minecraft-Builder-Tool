@@ -96,19 +96,28 @@ public class GenerateChunk : MonoBehaviour
         for (int j = 0; j < 4; j++)
         {
             Vector3 vert = verts[CubeData.tris[faceIndex, j]];
-
-            //vert = RotateVert(vert, block.Facing);
             vert += offsets;
-            vertices.Add(vert + pos);
-        }
 
-        if (CubeData.blockTextureMap.ContainsKey(block.Name))
-        {
-            AddTexture(block.GetTextureId(faceIndex));
-        }
-        else
-        {
-            AddTexture(3);
+            vertices.Add(vert + pos);
+
+            if (CubeData.blockTextureMap.ContainsKey(block.Name))
+            {
+                switch (CubeData.blockTextureMap[block.Name].RenderType)
+                {
+                    case BlockRenderTypes.Slab:
+                    case BlockRenderTypes.Stairs:
+                        AddTexture(block.GetTextureId(faceIndex), CubeData.uvsSlabs[j]);
+                        break;
+                    default:
+                        AddTexture(block.GetTextureId(faceIndex), CubeData.uvs[j]);
+                        break;
+                }
+                
+            }
+            else
+            {
+                AddTexture(3, CubeData.uvs[j]);
+            }
         }
 
         triangles.Add(vertexIndex);
@@ -121,23 +130,6 @@ public class GenerateChunk : MonoBehaviour
         vertexIndex += 4;
     }
 
-    private Vector3 RotateVert(Vector3 vert, string facing)
-    {
-        switch (facing)
-        {
-            case "north":
-                return vert;
-            case "south":
-                return new Vector3(1f - vert.x, vert.y, 1f - vert.z);
-            case "west":
-                return new Vector3(1f - vert.z, vert.y, vert.x);
-            case "east":
-                return new Vector3(vert.z, vert.y, 1f - vert.x);
-            default:
-                return vert;
-        }
-    }
-
     private void InsertStairs(Vector3 pos, Block block)
     {
         InsertSlab(pos, block);
@@ -146,9 +138,6 @@ public class GenerateChunk : MonoBehaviour
 
     private void InsertHalfSlab(Vector3 pos, Block block)
     {
-        //float yOffset = 0.5f;
-        //float xOffset = 0.5f;
-
         Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
 
         for (int i = 0; i < 6; i++)
@@ -178,7 +167,7 @@ public class GenerateChunk : MonoBehaviour
         }
     }
 
-    void AddTexture(int textureId)
+    void AddTexture(int textureId, Vector2 uv)
     {
         float y = textureId / CubeData.textureAtlasSizeInBlocks;
         float x = textureId - (y * CubeData.textureAtlasSizeInBlocks);
@@ -188,11 +177,10 @@ public class GenerateChunk : MonoBehaviour
 
         y = 1f - y - CubeData.normalizedBlockTextureSize;
 
-        uvs.Add(new Vector2(x, y));
-        uvs.Add(new Vector2(x, y + CubeData.normalizedBlockTextureSize));
-        uvs.Add(new Vector2(x + CubeData.normalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x + CubeData.normalizedBlockTextureSize, y + CubeData.normalizedBlockTextureSize));
+        x += CubeData.normalizedBlockTextureSize * uv.x;
+        y += CubeData.normalizedBlockTextureSize * uv.y;
 
+        uvs.Add(new Vector2(x, y));
     }
     void CreateMesh()
     {

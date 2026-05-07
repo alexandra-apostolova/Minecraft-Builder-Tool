@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -73,10 +74,18 @@ public static class CubeData
         new Vector2(1.0f, 1.0f),
     };
 
+    public static readonly Vector2[] uvsSlabs = new Vector2[4]
+    {
+        new Vector2(0.0f, 0.0f),
+        new Vector2(0.0f, 0.5f),
+        new Vector2(1.0f, 0.0f),
+        new Vector2(1.0f, 0.5f),
+    };
+
     public class BlockDefinition
     {
         public BlockRenderTypes RenderType;
-        public int[] Textures;
+        public int[] FaceTextures;
         public bool IsSolid;
     }
 
@@ -84,22 +93,102 @@ public static class CubeData
     public static readonly Dictionary<string, BlockDefinition> blockTextureMap =
         new Dictionary<string, BlockDefinition>()
     {
-        {"oak_planks", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 12 } } },
-        {"oak_log", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 14, 15 } } },
-        {"oak_stairs", new BlockDefinition{IsSolid = false, RenderType = BlockRenderTypes.Stairs, Textures = new int[] { 12 } } },
-        {"oak_slab", new BlockDefinition{IsSolid = false, RenderType = BlockRenderTypes.Slab, Textures = new int[] { 12 } } },
-        {"oak_leaves", new BlockDefinition{ IsSolid = false, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 5 } } },
-        {"spruce_planks", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 13 } } },
-        {"spruce_stairs", new BlockDefinition{IsSolid = false, RenderType = BlockRenderTypes.Stairs, Textures = new int[] { 13 } } },
-        {"spruce_slab", new BlockDefinition{IsSolid = false, RenderType = BlockRenderTypes.Slab, Textures = new int[] { 13 } } },
-        {"spruce_trapdoor", new BlockDefinition{ IsSolid = false, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 11 } } },
-        {"spruce_door", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 6, 7 } } },
-        {"grass_block", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 8, 9, 10 } } },
-        {"dirt", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 10 } } },
-        {"stone", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 1 } } },
-        {"cobblestone", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 0 } } },
-        {"decorated_pot", new BlockDefinition{ IsSolid = true, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 4 } } },
-        {"glass_pane", new BlockDefinition{ IsSolid = false, RenderType = BlockRenderTypes.Cube, Textures = new int[]{ 2 } } },
+        {"oak_planks", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{12, 12, 12, 12, 12, 12},
+        } },
+        {"oak_log", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 15, 15, 14, 14, 15, 15 }
+        } },
+        {"oak_stairs", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Stairs,
+            FaceTextures = new int[] { 12, 12, 12, 12, 12, 12 }
+        } },
+        {"oak_slab", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Slab,
+            FaceTextures = new int[] { 12, 12, 12, 12, 12, 12 }
+        } },
+        {"oak_leaves", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 5, 5, 5, 5, 5, 5 }
+        } },
+        {"spruce_planks", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 13, 13, 13, 13, 13, 13 }
+        } },
+        {"spruce_stairs", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Stairs,
+            FaceTextures = new int[] { 13, 13, 13, 13, 13, 13 }
+        } },
+        {"spruce_slab", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Slab,
+            FaceTextures = new int[] { 13, 13, 13, 13, 13, 13 }
+        } },
+        {"spruce_trapdoor", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 11, 11, 11, 11, 11, 11 }
+        } },
+        {"spruce_door", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 6, 6, 6, 7, 7, 7 }
+        } },
+        {"grass_block", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 9, 9, 8, 10, 9, 9 }
+        } },
+        {"dirt", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{10, 10, 10, 10, 10, 10 }
+        } },
+        {"stone", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{1, 1, 1, 1, 1, 1 }
+        } },
+        {"cobblestone", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 0, 0, 0, 0, 0, 0 }
+        } },
+        {"decorated_pot", new BlockDefinition
+        {
+            IsSolid = true,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 4, 4, 4, 4, 4, 4 }
+        } },
+        {"glass_pane", new BlockDefinition
+        {
+            IsSolid = false,
+            RenderType = BlockRenderTypes.Cube,
+            FaceTextures = new int[]{ 2, 2, 2, 2, 2, 2 }
+        } },
     };
 
 }
