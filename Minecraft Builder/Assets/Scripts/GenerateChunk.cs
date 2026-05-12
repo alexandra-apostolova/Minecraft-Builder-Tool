@@ -95,12 +95,12 @@ public class GenerateChunk : MonoBehaviour
         Vector3 offsets, int faceIndex, Block block)
     {
         Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
-        Quaternion rotation = GetRotation(block.Facing);
+        Quaternion rotation = GetHorizontalRotation(block.Facing);
         for (int j = 0; j < 4; j++)
         {
             Vector3 vert = verts[CubeData.tris[faceIndex, j]];
-            vert += offsets;
 
+            vert += offsets;
             vert = rotation * (vert - center) + center;
             vertices.Add(vert + pos);
 
@@ -133,6 +133,22 @@ public class GenerateChunk : MonoBehaviour
 
         vertexIndex += 4;
     }
+    private Quaternion GetHorizontalRotation(string direction)
+    {
+        switch (direction)
+        {
+            case "north":
+                return Quaternion.Euler(0, 270, 0);
+            case "east":
+                return Quaternion.Euler(0, 180, 0);
+            case "south":
+                return Quaternion.Euler(0, 90, 0);
+            case "west":
+                return Quaternion.Euler(0, 0, 0);
+            default:
+                return Quaternion.Euler(0, 0, 0);
+        }
+    }
 
     private void InsertStairs(Vector3 pos, Block block)
     {
@@ -140,29 +156,12 @@ public class GenerateChunk : MonoBehaviour
         InsertHalfSlab(pos, block);
     }
 
-    private Quaternion GetRotation(string direction)
-    {
-        switch (direction)
-        {
-            case "north":
-                return Quaternion.Euler(0, 270, 0);
-            case "east":
-                return Quaternion.Euler(0, 0, 0);
-            case "south":
-                return Quaternion.Euler(0, 90, 0);
-            case "west":
-                return Quaternion.Euler(0, 180, 0);
-            default:
-                return Quaternion.Euler(0, 0, 0);
-        }
-    }
-
     private void InsertHalfSlab(Vector3 pos, Block block)
     {
-        Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
+        float yOffset = (block.Half == "top") ? 0.0f : 0.5f;
         for (int i = 0; i < 6; i++)
         {
-            AddFace(CubeData.halfSlabVerts, pos, offset, i, block);
+            AddFace(CubeData.halfSlabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
         }
     }
 
@@ -180,10 +179,10 @@ public class GenerateChunk : MonoBehaviour
         for (int i = 0; i < 6; i++)
         {
             Vector3 neighborPos = pos + CubeData.faceChecks[i];
-            if (!CheckVoxel(neighborPos))
-            {
-                AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
-            }
+            AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
+            //if (!CheckVoxel(neighborPos))
+            //{
+            //}
         }
     }
 
