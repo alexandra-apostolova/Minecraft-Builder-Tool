@@ -133,26 +133,5 @@ public class Block
     public string Facing;
     public string Half;
     public string Axis;
-    public int GetTextureId(int faceIndex)
-    {
-        int[] faceTextures = CubeData.blockTextureMap[Name].FaceTextures;
-        switch (faceIndex)
-        {
-            case 0:
-                return faceTextures[0];
-            case 1:
-                return faceTextures[1];
-            case 2:
-                return faceTextures[2];
-            case 3:
-                return faceTextures[3];
-            case 4:
-                return faceTextures[4];
-            case 5:
-                return faceTextures[5];
-            default:
-                Debug.Log("Error! Invalid faceIndex.");
-                return faceTextures[0];
-        }
-    }
+
 }

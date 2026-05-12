@@ -1,15 +1,14 @@
-using NUnit.Framework;
-using System;
+
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using static Unity.Collections.AllocatorManager;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class GenerateChunk : MonoBehaviour
 {
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
+    public BlockData blockData;
+    public RenderType[] renderTypes;
 
     List<Vector3> vertices = new();
     List<int> triangles = new();
@@ -63,75 +62,45 @@ public class GenerateChunk : MonoBehaviour
     }
     void InsertData(Vector3 pos, Block block)
     {
-        if (CubeData.blockTextureMap.ContainsKey(block.Name))
+        BlockType blockInfo = blockData.blockTypes.FirstOrDefault(n => n.blockName == block.Name);
+        if (blockInfo != null)
         {
-            CubeData.BlockDefinition blockDef = CubeData.blockTextureMap[block.Name];
-
-            switch (blockDef.RenderType)
+            for (int i = 0; i < 6; i++)
             {
-                case BlockRenderTypes.Cube:
-                    InsertCube(pos, block);
-                    break;
-                case BlockRenderTypes.Stairs:
-                    InsertStairs(pos, block);
-                    break;
-                case BlockRenderTypes.Slab:
-                    InsertSlab(pos, block);
-                    break;
-                case BlockRenderTypes.Fence:
-                    break;
-                case BlockRenderTypes.Cross:
-                    break;
-                case BlockRenderTypes.Custom:
-                    break;
-                default:
-                    InsertCube(pos, block);
-                    break;
+                Vector3 neighborPos = pos + CubeData.faceChecks[i];
+                AddFace(blockInfo, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
+                //if (!CheckVoxel(neighborPos))
+                //{
+                //}
             }
         }
     }
 
-    private void AddFace(Vector3[] verts, Vector3 pos, 
+    private void AddFace(BlockType blockInfo, Vector3 pos,
         Vector3 offsets, int faceIndex, Block block)
     {
+        int faceVertCount = 0;
         Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
         Quaternion rotation = GetHorizontalRotation(block.Facing);
-        for (int j = 0; j < 4; j++)
+
+        for (int j = 0; j < blockInfo.renderType.faces[faceIndex].vertData.Length; j++)
         {
-            Vector3 vert = verts[CubeData.tris[faceIndex, j]];
+            Vector3 vert = blockInfo.renderType.faces[faceIndex].vertData[j].position;
 
             vert += offsets;
             vert = rotation * (vert - center) + center;
             vertices.Add(vert + pos);
 
-            if (CubeData.blockTextureMap.ContainsKey(block.Name))
-            {
-                switch (CubeData.blockTextureMap[block.Name].RenderType)
-                {
-                    case BlockRenderTypes.Slab:
-                    case BlockRenderTypes.Stairs:
-                        AddTexture(block.GetTextureId(faceIndex), CubeData.uvsSlabs[j]);
-                        break;
-                    default:
-                        AddTexture(block.GetTextureId(faceIndex), CubeData.uvs[j]);
-                        break;
-                }
-                
-            }
-            else
-            {
-                AddTexture(3, CubeData.uvs[j]);
-            }
+            AddTexture(blockInfo.GetTextureId(faceIndex), blockInfo.renderType.faces[faceIndex].vertData[j].uv);
+            faceVertCount++;
         }
 
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex + 3);
+        for (int i = 0; i < blockInfo.renderType.faces[faceIndex].triangles.Length; i++)
+        {
+            triangles.Add(vertexIndex + blockInfo.renderType.faces[faceIndex].triangles[i]);
+        }
 
-        vertexIndex += 4;
+        vertexIndex += faceVertCount;
     }
     private Quaternion GetHorizontalRotation(string direction)
     {
@@ -150,41 +119,41 @@ public class GenerateChunk : MonoBehaviour
         }
     }
 
-    private void InsertStairs(Vector3 pos, Block block)
-    {
-        InsertSlab(pos, block);
-        InsertHalfSlab(pos, block);
-    }
+    //private void InsertStairs(Vector3 pos, Block block)
+    //{
+    //    InsertSlab(pos, block);
+    //    InsertHalfSlab(pos, block);
+    //}
 
-    private void InsertHalfSlab(Vector3 pos, Block block)
-    {
-        float yOffset = (block.Half == "top") ? 0.0f : 0.5f;
-        for (int i = 0; i < 6; i++)
-        {
-            AddFace(CubeData.halfSlabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
-        }
-    }
+    //private void InsertHalfSlab(Vector3 pos, Block block)
+    //{
+    //    float yOffset = (block.Half == "top") ? 0.0f : 0.5f;
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        AddFace(CubeData.halfSlabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
+    //    }
+    //}
 
-    private void InsertSlab(Vector3 pos, Block block)
-    {
-        float yOffset = (block.Half == "top") ? 0.5f : 0.0f;
-        for (int i = 0; i < 6; i++)
-        {
-            AddFace(CubeData.slabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
-        }
-    }
+    //private void InsertSlab(Vector3 pos, Block block)
+    //{
+    //    float yOffset = (block.Half == "top") ? 0.5f : 0.0f;
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        AddFace(CubeData.slabVerts, pos, new Vector3(0.0f, yOffset, 0.0f), i, block);
+    //    }
+    //}
 
-    private void InsertCube(Vector3 pos, Block block)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            Vector3 neighborPos = pos + CubeData.faceChecks[i];
-            AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
-            //if (!CheckVoxel(neighborPos))
-            //{
-            //}
-        }
-    }
+    //private void InsertCube(Vector3 pos, Block block)
+    //{
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        Vector3 neighborPos = pos + CubeData.faceChecks[i];
+    //        AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
+    //        //if (!CheckVoxel(neighborPos))
+    //        //{
+    //        //}
+    //    }
+    //}
 
     void AddTexture(int textureId, Vector2 uv)
     {
@@ -209,6 +178,9 @@ public class GenerateChunk : MonoBehaviour
         mesh.uv = uvs.ToArray();
 
         mesh.RecalculateNormals();
+
+        Debug.Log(mesh.vertexCount);
+        Debug.Log(mesh.triangles.Length);
 
         meshFilter.mesh = mesh;
     }

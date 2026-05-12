@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88bd8321236624e47b6aee6a394d85eb, type: 3}
+  m_Name: BlockData
+  m_EditorClassIdentifier: Assembly-CSharp::BlockType
+  blockTypes:
+  - blockName: grass_block
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 9
+    frontFace: 9
+    topFace: 8
+    bottomFace: 10
+    leftFace: 9
+    rightFace: 9
+  - blockName: oak_planks
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 12
+    frontFace: 12
+    topFace: 12
+    bottomFace: 12
+    leftFace: 12
+    rightFace: 12
+  - blockName: oak_log
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 15
+    frontFace: 15
+    topFace: 14
+    bottomFace: 14
+    leftFace: 15
+    rightFace: 15
+  - blockName: oak_stairs
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 12
+    frontFace: 12
+    topFace: 12
+    bottomFace: 12
+    leftFace: 12
+    rightFace: 12
+  - blockName: oak_slab
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    backFace: 12
+    frontFace: 12
+    topFace: 12
+    bottomFace: 12
+    leftFace: 12
+    rightFace: 12
+  - blockName: oak_leaves
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 5
+    frontFace: 5
+    topFace: 5
+    bottomFace: 5
+    leftFace: 5
+    rightFace: 5
+  - blockName: spruce_planks
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 13
+    frontFace: 13
+    topFace: 13
+    bottomFace: 13
+    leftFace: 13
+    rightFace: 13
+  - blockName: spruce_stairs
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 13
+    frontFace: 13
+    topFace: 13
+    bottomFace: 13
+    leftFace: 13
+    rightFace: 13
+  - blockName: spruce_slab
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    backFace: 13
+    frontFace: 13
+    topFace: 13
+    bottomFace: 13
+    leftFace: 13
+    rightFace: 13
+  - blockName: spruce_trapdoor
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    backFace: 11
+    frontFace: 11
+    topFace: 11
+    bottomFace: 11
+    leftFace: 11
+    rightFace: 11
+  - blockName: spruce_door
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 6
+    frontFace: 6
+    topFace: 6
+    bottomFace: 6
+    leftFace: 6
+    rightFace: 6
+  - blockName: dirt
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 10
+    frontFace: 10
+    topFace: 10
+    bottomFace: 10
+    leftFace: 10
+    rightFace: 10
+  - blockName: stone
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 1
+    frontFace: 1
+    topFace: 1
+    bottomFace: 1
+    leftFace: 1
+    rightFace: 1
+  - blockName: cobblestone
+    isSolid: 1
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 0
+    frontFace: 0
+    topFace: 0
+    bottomFace: 0
+    leftFace: 0
+    rightFace: 0
+  - blockName: decorated_pot
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 4
+    frontFace: 4
+    topFace: 4
+    bottomFace: 4
+    leftFace: 4
+    rightFace: 4
+  - blockName: glass_pane
+    isSolid: 0
+    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    backFace: 2
+    frontFace: 2
+    topFace: 2
+    bottomFace: 2
+    leftFace: 2
+    rightFace: 2
