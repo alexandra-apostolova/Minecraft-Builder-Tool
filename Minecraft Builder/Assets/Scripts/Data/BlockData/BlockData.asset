@@ -42,7 +42,7 @@ MonoBehaviour:
     rightFace: 15
   - blockName: oak_stairs
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    renderType: {fileID: 11400000, guid: 0cae020233447a041b9d6e9cdce14957, type: 2}
     backFace: 12
     frontFace: 12
     topFace: 12
@@ -78,7 +78,7 @@ MonoBehaviour:
     rightFace: 13
   - blockName: spruce_stairs
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
+    renderType: {fileID: 11400000, guid: 0cae020233447a041b9d6e9cdce14957, type: 2}
     backFace: 13
     frontFace: 13
     topFace: 13

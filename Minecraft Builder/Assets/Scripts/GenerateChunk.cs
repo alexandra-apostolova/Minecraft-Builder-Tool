@@ -1,7 +1,10 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 public class GenerateChunk : MonoBehaviour
 {
@@ -65,15 +68,34 @@ public class GenerateChunk : MonoBehaviour
         BlockType blockInfo = blockData.blockTypes.FirstOrDefault(n => n.blockName == block.Name);
         if (blockInfo != null)
         {
+            string renderType = blockInfo.renderType.renderType;
+            Vector3 offset = GetOffset(renderType, block);
+           
             for (int i = 0; i < 6; i++)
             {
-                Vector3 neighborPos = pos + CubeData.faceChecks[i];
-                AddFace(blockInfo, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
+                //Vector3 neighborPos = pos + CubeData.faceChecks[i];
+                AddFace(blockInfo, pos, offset, i, block);
                 //if (!CheckVoxel(neighborPos))
                 //{
                 //}
             }
         }
+    }
+
+    private Vector3 GetOffset(string renderType, Block block)
+    {
+        Vector3 offset = Vector3.zero;
+        switch (renderType)
+        {
+            case "Slab":
+                float yOffset = (block.Half == BlockHalf.Top) ? 0.5f : 0.0f;
+                offset.y = yOffset;
+                break;
+            default:
+                return offset;
+        }
+
+        return offset;
     }
 
     private void AddFace(BlockType blockInfo, Vector3 pos,
@@ -143,17 +165,6 @@ public class GenerateChunk : MonoBehaviour
     //    }
     //}
 
-    //private void InsertCube(Vector3 pos, Block block)
-    //{
-    //    for (int i = 0; i < 6; i++)
-    //    {
-    //        Vector3 neighborPos = pos + CubeData.faceChecks[i];
-    //        AddFace(CubeData.verts, pos, new Vector3(0.0f, 0.0f, 0.0f), i, block);
-    //        //if (!CheckVoxel(neighborPos))
-    //        //{
-    //        //}
-    //    }
-    //}
 
     void AddTexture(int textureId, Vector2 uv)
     {
@@ -178,9 +189,6 @@ public class GenerateChunk : MonoBehaviour
         mesh.uv = uvs.ToArray();
 
         mesh.RecalculateNormals();
-
-        Debug.Log(mesh.vertexCount);
-        Debug.Log(mesh.triangles.Length);
 
         meshFilter.mesh = mesh;
     }
