@@ -51,7 +51,7 @@ MonoBehaviour:
     rightFace: 12
   - blockName: oak_slab
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    renderType: {fileID: 11400000, guid: 3de8f052d8d00a143af8ea0de45e15be, type: 2}
     backFace: 12
     frontFace: 12
     topFace: 12
@@ -87,7 +87,7 @@ MonoBehaviour:
     rightFace: 13
   - blockName: spruce_slab
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    renderType: {fileID: 11400000, guid: 3de8f052d8d00a143af8ea0de45e15be, type: 2}
     backFace: 13
     frontFace: 13
     topFace: 13
@@ -96,7 +96,7 @@ MonoBehaviour:
     rightFace: 13
   - blockName: spruce_trapdoor
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+    renderType: {fileID: 11400000, guid: 3de8f052d8d00a143af8ea0de45e15be, type: 2}
     backFace: 11
     frontFace: 11
     topFace: 11
