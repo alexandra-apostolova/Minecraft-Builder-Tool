@@ -27,7 +27,7 @@ public class GenerateChunk : MonoBehaviour
 
         foreach (var block in HouseData.Blocks)
         {
-            if (block.Type == "air")
+            if (block.Name == "air")
                 continue;
 
             Vector3 pos = new(block.x, block.y, block.z);
@@ -41,7 +41,7 @@ public class GenerateChunk : MonoBehaviour
     {
         foreach (var block in HouseData.Blocks)
         {
-            if (block.Type == "air")
+            if (block.Name == "air")
                 continue;
 
             voxelMap[block.x, block.y, block.z] = true;
@@ -102,17 +102,17 @@ public class GenerateChunk : MonoBehaviour
 
         vertexIndex += faceVertCount;
     }
-    private Quaternion GetHorizontalRotation(string direction)
+    private Quaternion GetHorizontalRotation(BlockFacing direction)
     {
         switch (direction)
         {
-            case "north":
+            case BlockFacing.North:
                 return Quaternion.Euler(0, 270, 0);
-            case "east":
+            case BlockFacing.East:
                 return Quaternion.Euler(0, 180, 0);
-            case "south":
+            case BlockFacing.South:
                 return Quaternion.Euler(0, 90, 0);
-            case "west":
+            case BlockFacing.West:
                 return Quaternion.Euler(0, 0, 0);
             default:
                 return Quaternion.Euler(0, 0, 0);

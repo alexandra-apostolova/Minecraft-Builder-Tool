@@ -53,65 +53,70 @@ public class ReadSchema : MonoBehaviour
                 x = blockPos.x,
                 y = blockPos.y,
                 z = blockPos.z,
-                Type = palette[paletteIndex]
             };
 
-            ReadOnlySpan<char> fullId = blockToAdd.Type;
-
-            if (blockToAdd.Type.Contains('['))
-            {
-                int openBracketIndex = fullId.IndexOf('[');
-                int closeBracketIndex = fullId.IndexOf(']');
-
-                ReadOnlySpan<char> name = fullId.Slice(0, openBracketIndex);
-                blockToAdd.Name = name.ToString();
-
-                ReadOnlySpan<char> inner = fullId.Slice(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1);
-
-                while (!inner.IsEmpty)
-                {
-                    int comaIndex = inner.IndexOf(',');
-
-                    ReadOnlySpan<char> pair;
-                    if (comaIndex == -1)
-                    {
-                        pair = inner;
-                        inner = ReadOnlySpan<char>.Empty;
-                    }
-                    else
-                    {
-                        pair = inner.Slice(0, comaIndex);
-                        inner = inner.Slice(comaIndex + 1);
-                    }
-
-                    int equalsIndex = pair.IndexOf("=");
-                    ReadOnlySpan<char> key = pair.Slice(0, equalsIndex);
-                    ReadOnlySpan<char> value = pair.Slice(equalsIndex + 1);
-
-                    if (key.ToString() == "facing")
-                    {
-                        blockToAdd.Facing = value.ToString();
-                    }
-                    else if (key.ToString() == "half" || key.ToString() == "type")
-                    {
-                        blockToAdd.Half = value.ToString();
-                    }
-                    else if (key.ToString() == "axis")
-                    {
-                        blockToAdd.Axis = value.ToString();
-                    }
-                }
-            }
-            else
-            {
-                blockToAdd.Name = blockToAdd.Type;
-            }
+            BreakDownBlockType(palette, paletteIndex, blockToAdd);
 
             blocksList.Add(blockToAdd);
         }
 
         HouseData.Blocks = blocksList;
     }
+
+    private static void BreakDownBlockType(Dictionary<int, string> palette, int paletteIndex, Block blockToAdd)
+    {
+        ReadOnlySpan<char> fullId = palette[paletteIndex];
+
+        if (palette[paletteIndex].Contains('['))
+        {
+            int openBracketIndex = fullId.IndexOf('[');
+            int closeBracketIndex = fullId.IndexOf(']');
+
+            ReadOnlySpan<char> name = fullId.Slice(0, openBracketIndex);
+            blockToAdd.Name = name.ToString();
+
+            ReadOnlySpan<char> inner = fullId.Slice(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1);
+
+            while (!inner.IsEmpty)
+            {
+                int comaIndex = inner.IndexOf(',');
+
+                ReadOnlySpan<char> pair;
+                if (comaIndex == -1)
+                {
+                    pair = inner;
+                    inner = ReadOnlySpan<char>.Empty;
+                }
+                else
+                {
+                    pair = inner.Slice(0, comaIndex);
+                    inner = inner.Slice(comaIndex + 1);
+                }
+
+                int equalsIndex = pair.IndexOf("=");
+                ReadOnlySpan<char> key = pair.Slice(0, equalsIndex);
+                ReadOnlySpan<char> value = pair.Slice(equalsIndex + 1);
+
+                if (key.ToString() == "facing")
+                {
+                    blockToAdd.Facing = ParseEnum(value.ToString(), BlockFacing.West);
+                }
+                else if (key.ToString() == "half" || key.ToString() == "type")
+                {
+                    blockToAdd.Half = ParseEnum(value.ToString(), BlockHalf.Bottom);
+                }
+                else if (key.ToString() == "axis")
+                {
+                    blockToAdd.Axis = ParseEnum(value.ToString(), BlockAxis.y);
+                }
+            }
+        }
+        else
+        {
+            blockToAdd.Name = fullId.ToString();
+        }
+    }
+
     static Vector3Int IndexToPos(int index, int width, int length)
     {
         int x = index % width;
@@ -120,18 +125,24 @@ public class ReadSchema : MonoBehaviour
 
         return new Vector3Int(x, y, z);
     }
+    public static T ParseEnum<T>(string value, T defaultValue) where T : struct
+    {
+        if (Enum.TryParse(value, true, out T result))
+            return result;
+
+        return defaultValue;
+    }
 }
 
 public class Block
 {
+    public string Name;
     public int x;
     public int z;
     public int y;
-    public string Type;
 
-    public string Name;
-    public string Facing;
-    public string Half;
-    public string Axis;
+    public BlockFacing Facing;
+    public BlockHalf Half;
+    public BlockAxis Axis;
 
 }
