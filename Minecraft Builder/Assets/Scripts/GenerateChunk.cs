@@ -102,15 +102,12 @@ public class GenerateChunk : MonoBehaviour
         Vector3 offsets, int faceIndex, Block block)
     {
         int faceVertCount = 0;
-        Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
-        Quaternion rotation = GetHorizontalRotation(block.Facing);
 
         for (int j = 0; j < blockInfo.renderType.faces[faceIndex].vertData.Length; j++)
         {
-            Vector3 vert = blockInfo.renderType.faces[faceIndex].vertData[j].position;
+            Vector3 vert = blockInfo.renderType.faces[faceIndex].vertData[j].GetRotatedPosition(block.Facing);
 
             vert += offsets;
-            vert = rotation * (vert - center) + center;
             vertices.Add(vert + pos);
 
             AddTexture(blockInfo.GetTextureId(faceIndex), blockInfo.renderType.faces[faceIndex].vertData[j].uv);
@@ -124,22 +121,7 @@ public class GenerateChunk : MonoBehaviour
 
         vertexIndex += faceVertCount;
     }
-    private Quaternion GetHorizontalRotation(BlockFacing direction)
-    {
-        switch (direction)
-        {
-            case BlockFacing.North:
-                return Quaternion.Euler(0, 270, 0);
-            case BlockFacing.East:
-                return Quaternion.Euler(0, 180, 0);
-            case BlockFacing.South:
-                return Quaternion.Euler(0, 90, 0);
-            case BlockFacing.West:
-                return Quaternion.Euler(0, 0, 0);
-            default:
-                return Quaternion.Euler(0, 0, 0);
-        }
-    }
+
 
     //private void InsertStairs(Vector3 pos, Block block)
     //{

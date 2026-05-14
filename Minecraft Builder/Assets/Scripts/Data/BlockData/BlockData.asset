@@ -96,7 +96,7 @@ MonoBehaviour:
     rightFace: 13
   - blockName: spruce_trapdoor
     isSolid: 0
-    renderType: {fileID: 11400000, guid: 3de8f052d8d00a143af8ea0de45e15be, type: 2}
+    renderType: {fileID: 11400000, guid: 3f0f0c2043ed2854f86a07ed40353d56, type: 2}
     backFace: 11
     frontFace: 11
     topFace: 11

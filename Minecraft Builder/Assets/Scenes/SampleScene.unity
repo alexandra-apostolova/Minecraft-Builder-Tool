@@ -630,7 +630,9 @@ MonoBehaviour:
   blockData: {fileID: 11400000, guid: 448b551a40041c642abe4c02be58d806, type: 2}
   renderTypes:
   - {fileID: 11400000, guid: 974cdeafce8ad1f45a544f2a22cb74cb, type: 2}
-  - {fileID: 11400000, guid: 1343cd5b47600574cb9efefc61b55a41, type: 2}
+  - {fileID: 11400000, guid: 0cae020233447a041b9d6e9cdce14957, type: 2}
+  - {fileID: 11400000, guid: 3de8f052d8d00a143af8ea0de45e15be, type: 2}
+  - {fileID: 11400000, guid: 3f0f0c2043ed2854f86a07ed40353d56, type: 2}
 --- !u!23 &1480978347
 MeshRenderer:
   m_ObjectHideFlags: 0

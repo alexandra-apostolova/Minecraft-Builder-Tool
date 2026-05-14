@@ -18,7 +18,37 @@ public class VertData
         position = pos;
         uv = _uv;
     }
+
+    public Vector3 GetRotatedPosition(BlockFacing facing)
+    {
+        Vector3 angles;
+        switch (facing)
+        {
+            case BlockFacing.North:
+                angles = new Vector3(0, 0, 0);
+                break;
+            case BlockFacing.East:
+                angles = new Vector3(0, 270, 0);
+                break;
+            case BlockFacing.South:
+                angles = new Vector3(0, 180, 0);
+                break;
+            case BlockFacing.West:
+                angles = new Vector3(0, 90, 0);
+                break;
+            default:
+                angles = new Vector3(0, 0, 0);
+                break;
+        }
+
+        Vector3 center = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 direction = position - center;
+        direction = Quaternion.Euler(angles) * direction;
+        return direction + center;
+    }
 }
+
+
 
 [System.Serializable]
 public class FaceMeshData
